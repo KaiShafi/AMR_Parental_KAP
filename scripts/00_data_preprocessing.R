@@ -69,8 +69,6 @@ data <- data |>
 data <- data |> 
   mutate(`I thought that my child's condition was not severe enough`= replace_na(mean(`I thought that my child's condition was not severe enough`,na.rm = T)))
 
-data <- data |> 
-  mutate(Child_Age = replace_na(mean(`Child’s age (years)`, na.rm = T)))
 
 #Categorical Value Imputation
 data$`Why would you give your child antibiotics without a physician's advice? (You can choose more than one)`= as.factor(data$`Why would you give your child antibiotics without a physician's advice? (You can choose more than one)`)
@@ -79,10 +77,10 @@ data$`Why would you give your child antibiotics without a physician's advice? (Y
 data <- data |> 
   mutate_if(is.character, as.factor)
 
+
 data <- data |> 
   replace_na(list(`Why would you give your child antibiotics without a physician's advice? (You can choose more than one)`='Others'))
 
-glimpse(data)
 
 data <- data |> 
   replace_na(list(Your_Average_Household_Income_Per_month='Low (less than 30000 BDT)'))
@@ -147,10 +145,12 @@ data <- data |>
 #Child Age
 data <- data |> 
   mutate(Child_Age = case_when(
-    `Child’s age (years)` ==  1 ~ '<5',
-    `Child’s age (years)` == 2 ~ '5-9',
-    `Child’s age (years)` == 3  ~ '>10'
+    `Child’s age (years)` == 1 ~ "<5",
+    `Child’s age (years)` == 2 ~ "5-9",
+    `Child’s age (years)` == 3 ~ ">10"
   ))
+
+
 
 #Number Of Children
 data <- data |> 
@@ -170,12 +170,6 @@ data <- data |>
     `Who is the leading child caregiver at home?` == 5 ~ 'Others',
   ))
 
+#Export
 
-miss_var_which(data)
-data$Child_Age
-
-data |> 
-  count(`Child’s age (years)`) |> 
-  arrange(desc(n))
-
-glimpse(data)
+write.csv(data,"data/AMR_parental_KAP_preprocessed.csv" , row.names = F)
